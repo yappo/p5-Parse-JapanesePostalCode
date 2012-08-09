@@ -9,3 +9,4 @@ Makefile.old
 nytprof.out
 MANIFEST.bak
 *.sw[po]
+MYMETA.*

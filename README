@@ -1,27 +1,17 @@
-This is Perl module Parse::JapaneseZipCode.
+NAME
+    Parse::JapaneseZipCode -
 
-INSTALLATION
+SYNOPSIS
+        use Parse::JapaneseZipCode;
 
-Parse::JapaneseZipCode installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+DESCRIPTION
+    Parse::JapaneseZipCode is
 
-    % cpan Parse::JapaneseZipCode
+AUTHOR
+    Kazuhiro Osawa <yappo {at} shibuya {dot} pl>
 
-Download it, unpack it, then build it as per the usual:
+SEE ALSO
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
-    % perl Makefile.PL
-    % make && make test
-
-Then install it:
-
-    % make install
-
-DOCUMENTATION
-
-Parse::JapaneseZipCode documentation is available as in POD. So you can do:
-
-    % perldoc Parse::JapaneseZipCode
-
-to read the documentation online with your favorite pager.
-
-Kazuhiro Osawa
