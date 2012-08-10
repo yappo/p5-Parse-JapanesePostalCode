@@ -10,17 +10,34 @@ my @COLUMNS = qw/
     pref_kana city_kana town_kana pref city town
     is_multi_zip has_koaza_banchi has_chome is_multi_town
     update_status update_reason
-    build build_kana floor
 /;
 
+my @METHODS = (@COLUMNS, qw/
+    subtown_kana subtown
+    build build_kana floor
+/);
 
-for my $name (@COLUMNS) {
+for my $name (@METHODS) {
     my $sub = sub { $_[0]->{columns}{$name} };
     no strict 'refs';
     *{$name} = $sub;
 }
 
 sub columns { @COLUMNS }
+
+sub has_subtown { !! $_[0]->subtown }
+
+sub get_subtown_list {
+    my $self = shift;
+    return unless $self->subtown;
+    ref($self->subtown) eq 'ARRAY' ? @{ $self->subtown } : ( $self->subtown );
+}
+
+sub get_subtown_kana_list {
+    my $self = shift;
+    return unless $self->subtown_kana;
+    ref($self->subtown_kana) eq 'ARRAY' ? @{ $self->subtown_kana } : ( $self->subtown_kana );
+}
 
 sub new {
     my($class, %opts) = @_;
@@ -39,6 +56,7 @@ sub new {
     }, $class;
 
     $self->fix_town;
+    $self->fix_subtown;
     $self->fix_build;
     $self->fix_kana;
 
@@ -54,6 +72,26 @@ sub fix_town {
     } elsif ($columns->{town} =~ s/（その他）$//) {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
     }
+}
+
+sub fix_subtown {
+    my $self = shift;
+    my $columns = $self->{columns};
+    return unless $columns->{town};
+
+    my @subtown;
+    my @subtown_kana;
+
+    # range chome
+    if ($columns->{town} =~ s/（(\d+)〜(\d+)丁目）$//) {
+        my($first, $last) = (alnum_z2h($1), alnum_z2h($2));
+        @subtown      = map { $_ . '丁目' } $first..$last;
+        @subtown_kana = map { $_ . 'チョウメ' } $first..$last;
+        $columns->{town_kana} =~ s/\(\d+-\d+ﾁｮｳﾒ\)$//;
+    }
+
+    $columns->{subtown}      = \@subtown      if @subtown;
+    $columns->{subtown_kana} = \@subtown_kana if @subtown_kana;
 }
 
 sub fix_build {
