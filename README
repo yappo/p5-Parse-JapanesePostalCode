@@ -1,11 +1,25 @@
 NAME
-    Parse::JapaneseZipCode -
+    Parse::JapaneseZipCode - ZipCode Parser for 日本郵政
 
 SYNOPSIS
         use Parse::JapaneseZipCode;
 
+        my $parser = Parse::JapaneseZipCode->new( file => 'KEN_ALL.csv' );
+        while (my $obj = $parser->fetch_obj) {
+            my @list = ($obj->zip, $obj->pref, $obj->city, $obj->town);
+            # TODO: my @list = map { $_ ? $_ : () } ($obj->zip, $obj->pref, $obj->district, $obj->city, $obj->ward, $obj->town);
+            if ($obj->has_subtown) {
+                push @list, join '/', @{ $obj->subtown };
+            }
+            if ($obj->build) {
+                my $str = $obj->build;
+                $str .= $obj->floor . 'F' if $obj->floor;
+                push @list, $str;
+            }
+        }
+
 DESCRIPTION
-    Parse::JapaneseZipCode is
+    Parse::JapaneseZipCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
 
 AUTHOR
     Kazuhiro Osawa <yappo {at} shibuya {dot} pl>
