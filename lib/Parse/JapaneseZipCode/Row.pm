@@ -56,11 +56,19 @@ sub fix_town {
 
 sub fix_build {
     my $self = shift;
-    return unless $self->{build_town};
     my $columns = $self->{columns};
+
+    unless ($self->{build_town}) {
+        unless ($columns->{town} && $columns->{town} =~ /（.+?階.*?）$/) {
+            return;
+        }
+    }
+
     my $build_town      = $self->{build_town};
     my $build_town_kana = $self->{build_town_kana};
 
+    $columns->{town}      =~ s/（高層棟）//;
+    $columns->{town_kana} =~ s/\(ｺｳｿｳﾄｳ\)//;
     if ($columns->{town} =~ s/（次のビルを除く）$//) {
         $columns->{town_kana} =~ s/\(ﾂｷﾞﾉﾋﾞﾙｦﾉｿﾞｸ\)$//;
     } elsif ($columns->{town} =~ /^$build_town(.+)（(.+)）$/) {
