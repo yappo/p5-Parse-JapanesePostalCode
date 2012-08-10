@@ -79,7 +79,7 @@ sub fix_subtown {
     my @subtown_kana;
 
     # chome
-    if ($columns->{town} =~ s/（([\d〜、]+)丁目）$//) {
+    if ($columns->{town} =~ s/（([\d〜～、]+)丁目）$//) {
         my $num = alnum_z2h($1);
 
         my @nums = map {
