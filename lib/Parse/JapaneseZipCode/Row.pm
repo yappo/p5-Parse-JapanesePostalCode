@@ -34,18 +34,6 @@ sub columns { @COLUMNS }
 
 sub has_subtown { !! $_[0]->subtown }
 
-sub get_subtown_list {
-    my $self = shift;
-    return unless $self->subtown;
-    ref($self->subtown) eq 'ARRAY' ? @{ $self->subtown } : ( $self->subtown );
-}
-
-sub get_subtown_kana_list {
-    my $self = shift;
-    return unless $self->subtown_kana;
-    ref($self->subtown_kana) eq 'ARRAY' ? @{ $self->subtown_kana } : ( $self->subtown_kana );
-}
-
 sub new {
     my($class, %opts) = @_;
 

@@ -34,10 +34,7 @@ subtest 'range' => sub {
     is($row->town, '大通西');
     is($row->town_kana, 'オオドオリニシ');
     ok($row->has_subtown);
-    is(ref($row->subtown), 'ARRAY');
-    is(ref($row->subtown_kana), 'ARRAY');
-    my $subtown = [ $row->get_subtown_list ];
-    is_deeply($subtown, [
+    is_deeply($row->subtown, [
         '1丁目',
         '2丁目',
         '3丁目',
@@ -58,8 +55,7 @@ subtest 'range' => sub {
         '18丁目',
         '19丁目',
     ]);
-    my $subtown_kana = [ $row->get_subtown_kana_list ];
-    is_deeply($subtown_kana, [
+    is_deeply($row->subtown_kana, [
         '1チョウメ',
         '2チョウメ',
         '3チョウメ',
