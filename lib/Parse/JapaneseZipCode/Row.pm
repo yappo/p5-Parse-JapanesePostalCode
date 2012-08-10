@@ -185,6 +185,12 @@ sub fix_subtown {
         $columns->{town}      = $aza;
         $columns->{town_kana} = $aza_kana;
     }
+    # other
+    elsif ($columns->{town} =~ s/（(.+?)）$//) {
+        @subtown = split /、/, $1;
+        $columns->{town_kana} =~ s/\((.+?)\)$//;
+        @subtown_kana = split /､/, $1;
+    }
 
     $columns->{subtown}      = \@subtown      if @subtown;
     $columns->{subtown_kana} = \@subtown_kana if @subtown_kana;
