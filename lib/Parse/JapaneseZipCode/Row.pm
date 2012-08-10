@@ -82,8 +82,18 @@ sub fix_subtown {
     my @subtown;
     my @subtown_kana;
 
-    # range chome
-    if ($columns->{town} =~ s/（(\d+)[〜～](\d+)丁目）$//) {
+    # chome
+    if ($columns->{town} =~ s/（(\d+)丁目）$//) {
+        my $num = alnum_z2h($1);
+        @subtown      = ("${num}丁目");;
+        @subtown_kana = ("${num}チョウメ");
+        $columns->{town_kana} =~ s/\(\d+ﾁｮｳﾒ\)$//;
+    } elsif ($columns->{town} =~ s/（(\d+(?:、\d+))丁目）$//) {
+        my @nums = map { alnum_z2h($_) } split /、/, $1;
+        @subtown      = map { $_ . '丁目' } @nums;
+        @subtown_kana = map { $_ . 'チョウメ' } @nums;
+        $columns->{town_kana} =~ s/\(\d+(?:､\d+)ﾁｮｳﾒ\)$//;
+    } elsif ($columns->{town} =~ s/（(\d+)[〜～](\d+)丁目）$//) {
         my($first, $last) = (alnum_z2h($1), alnum_z2h($2));
         @subtown      = map { $_ . '丁目' } $first..$last;
         @subtown_kana = map { $_ . 'チョウメ' } $first..$last;
