@@ -115,7 +115,7 @@ sub fix_subtown {
             my @tmp = map {
                 if (/\d+地割$/) {
                     my $str = $_;
-                    $str =~ s/^$aza//;
+                    $str =~ s/^\Q$aza\E//;
                     $str =~ s/^第//;
                     "第$str";
                 } else {
@@ -128,7 +128,7 @@ sub fix_subtown {
             my @tmp = map {
                 if (/\d+ﾁﾜﾘ$/) {
                     my $str = $_;
-                    $str =~ s/^$aza_kana//;
+                    $str =~ s/^\Q$aza_kana\E//;
                     $str =~ s/^ﾀﾞｲ//;
                     "ﾀﾞｲ$str";
                 } else {
@@ -141,7 +141,7 @@ sub fix_subtown {
         @subtown = map {
             if (/\d+地割$/) {
                 my $str = $_;
-                $str =~ s/^$aza//;
+                $str =~ s/^\Q$aza\E//;
                 $str =~ s/^第//;
                 "第$str";
             } else {
@@ -151,7 +151,7 @@ sub fix_subtown {
         @subtown_kana = map {
             if (/\d+ﾁﾜﾘ$/) {
                 my $str = $_;
-                $str =~ s/^$aza_kana//;
+                $str =~ s/^\Q$aza_kana\E//;
                 $str =~ s/^ﾀﾞｲ//;
                 "ﾀﾞｲ$str";
             } else {
@@ -201,14 +201,14 @@ sub fix_build {
     $columns->{town_kana} =~ s/\(ｺｳｿｳﾄｳ\)//;
     if ($columns->{town} =~ s/（次のビルを除く）$//) {
         $columns->{town_kana} =~ s/\(ﾂｷﾞﾉﾋﾞﾙｦﾉｿﾞｸ\)$//;
-    } elsif ($columns->{town} =~ /^$build_town(.+)（(.+)）$/) {
+    } elsif ($columns->{town} =~ /^\Q$build_town\E(.+)（(.+)）$/) {
         my $floor = $2;
         $columns->{build} = $1;
         if ($floor =~ /(\d+)階/) {
             $columns->{floor} = alnum_z2h($1);
         }
 
-        $columns->{town_kana} =~ /^$build_town_kana(.+)\(.+$/;
+        $columns->{town_kana} =~ /^\Q$build_town_kana\E(.+)\(.+$/;
         $columns->{build_kana} = $1;
 
         $columns->{town}      = $build_town;
