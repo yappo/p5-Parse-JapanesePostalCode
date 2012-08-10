@@ -3,7 +3,14 @@ use strict;
 use warnings;
 use utf8;
 
-use Lingua::JA::Regular::Unicode qw/ alnum_z2h katakana_h2z /;
+use Lingua::JA::Regular::Unicode qw/ katakana_h2z /;
+
+sub alnum_z2h {
+    my $str = shift;
+    $str = Lingua::JA::Regular::Unicode::alnum_z2h($str);
+    $str =~ tr/~−/〜-/;
+    $str;
+}
 
 my @COLUMNS = qw/
     region_id old_zip zip
@@ -101,6 +108,13 @@ sub fix_subtown {
         $columns->{town_kana} =~ s/\(\d+-\d+ﾁｮｳﾒ\)$//;
     }
 
+    # banchi
+    if ($columns->{town} =~ s/（(.+?番地)）$//) {
+        @subtown = map { alnum_z2h($_) } split /、/, $1;
+        $columns->{town_kana} =~ s/\((.+?ﾊﾞﾝﾁ)\)$//;
+        @subtown_kana = map { alnum_z2h($_) } split /､/, $1;
+    }
+
     $columns->{subtown}      = \@subtown      if @subtown;
     $columns->{subtown_kana} = \@subtown_kana if @subtown_kana;
 }
@@ -144,6 +158,16 @@ sub fix_kana_alnum {
         next unless defined $self->{columns}{$name};
         $self->{columns}{$name} = katakana_h2z($self->{columns}{$name}) if $self->{katakana_h2z};
         $self->{columns}{$name} = alnum_z2h($self->{columns}{$name})    if $self->{alnum_z2h};
+    }
+    if ($self->has_subtown) {
+        for my $i (0..(scalar(@{ $self->subtown }) - 1)) {
+            $self->subtown->[$i]      = katakana_h2z($self->subtown->[$i]) if $self->{katakana_h2z};
+            $self->subtown->[$i]      = alnum_z2h($self->subtown->[$i])    if $self->{alnum_z2h};
+        }
+        for my $i (0..(scalar(@{ $self->subtown_kana }) - 1)) {
+            $self->subtown_kana->[$i] = katakana_h2z($self->subtown_kana->[$i]) if $self->{katakana_h2z};
+            $self->subtown_kana->[$i] = alnum_z2h($self->subtown_kana->[$i])    if $self->{alnum_z2h};
+        }
     }
 }
 
