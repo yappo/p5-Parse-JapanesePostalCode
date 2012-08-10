@@ -29,7 +29,7 @@ while (my $obj = $parser->fetch_obj) {
 #    /;
 
     if ($obj->has_subtown) {
-        push @line, join('/', $obj->get_subtown_kana_list);
+        push @line, join('/', @{ $obj->subtown_kana });
     }
 
     push @line, map { $obj->$_ // '' } qw/
@@ -37,7 +37,7 @@ while (my $obj = $parser->fetch_obj) {
     build floor
     /;
     if ($obj->has_subtown) {
-        push @line, join('/', $obj->get_subtown_list);
+        push @line, join('/', @{ $obj->subtown });
     }
 
     push @line, map { $obj->$_ // '' } qw/ is_multi_zip is_multi_town /;
