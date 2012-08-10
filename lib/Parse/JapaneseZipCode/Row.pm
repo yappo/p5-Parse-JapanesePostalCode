@@ -52,8 +52,8 @@ sub new {
     }, $class;
 
     $self->fix_town;
-    $self->fix_subtown;
     $self->fix_build;
+    $self->fix_subtown unless $self->build;
     $self->fix_kana_alnum;
 
     $self;
@@ -103,14 +103,8 @@ sub fix_subtown {
 
         $columns->{town_kana} =~ s/\([\d\-､]+ﾁｮｳﾒ\)$//;
     }
-    # banchi
-    elsif ($columns->{town} =~ s/（(.+?番地)）$//) {
-        @subtown = map { alnum_z2h($_) } split /、/, $1;
-        $columns->{town_kana} =~ s/\((.+?ﾊﾞﾝﾁ)\)$//;
-        @subtown_kana = map { alnum_z2h($_) } split /､/, $1;
-    }
     # chiwari
-    elsif ($columns->{town} =~ /地割/) {
+    elsif ($columns->{town} =~ /^[^\（]+地割/) {
         my($prefix, $koaza)           = $columns->{town}      =~ /^(.+\d+地割)(?:（(.+)）)?$/;
         my($prefix_kana, $koaza_kana) = $columns->{town_kana} =~ /^(.+\d+ﾁﾜﾘ)(?:\((.+)\))?$/;
 
@@ -187,9 +181,29 @@ sub fix_subtown {
     }
     # other
     elsif ($columns->{town} =~ s/（(.+?)）$//) {
-        @subtown = split /、/, $1;
+        my $town = $1;
+        $town =~ s{「([^\」]+)」}{
+            my $str = $1;
+            $str =~ s/、/_____COMMNA_____/g;
+            "「${str}」";
+        }ge;
+        @subtown = map {
+            my $str = $_;
+            $str =~ s/_____COMMNA_____/、/g;
+            $str;
+        } split /、/, $town;
         $columns->{town_kana} =~ s/\((.+?)\)$//;
-        @subtown_kana = split /､/, $1;
+        my $kana = $1;
+        $kana =~ s{<([^>]+)>}{
+            my $str = $1;
+            $str =~ s/､/_____COMMNA_____/g;
+            "<${str}>";
+        }ge;
+        @subtown_kana = map {
+            my $str = $_;
+            $str =~ s/_____COMMNA_____/,/g;
+            $str;
+        } split /､/, $kana;
     }
 
     $columns->{subtown}      = \@subtown      if @subtown;

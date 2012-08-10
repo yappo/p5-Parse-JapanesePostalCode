@@ -39,7 +39,7 @@ sub fetch_obj {
     );
 }
 
-sub get_line {
+sub _get_line {
     my($self, ) = @_;
 
     my $fh = $self->{fh};
@@ -55,11 +55,29 @@ sub get_line {
         $data;
     } split ',', $line;
 
-    my $town = $row[8];
+    \@row;
+}
+
+sub get_line {
+    my($self, ) = @_;
+
+    my $row = $self->_get_line;
+    return unless $row;
+    if ($row->[8] =~ /（.+[^）]$/) {
+        while (1) {
+            my $tmp = $self->_get_line;
+            return unless $tmp;
+            $row->[5] .= $tmp->[5];
+            $row->[8] .= $tmp->[8];
+            last if $row->[8] =~ /\）$/;
+        }
+    }
+
+    my $town = $row->[8];
 
     if ($town =~ /^(.+)（次のビルを除く）$/) {
         $self->{current_build_town} = $1;
-        ($self->{current_build_town_kana}) = $row[5] =~ /^(.+)\(/;
+        ($self->{current_build_town_kana}) = $row->[5] =~ /^(.+)\(/;
     } else {
         my $current_build_town = $self->{current_build_town};
         unless ($town =~ /^$current_build_town.+（.+階.*）$/) {
@@ -68,7 +86,7 @@ sub get_line {
         }
     }
 
-    \@row;
+    $row;
 }
 
 1;
