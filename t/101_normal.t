@@ -2,17 +2,12 @@ use strict;
 use warnings;
 use utf8;
 use Test::More;
+use t::Util;
 
-use Parse::JapaneseZipCode;
-
-my $data = join "\r\n",
+my $parser = make_parser
     qq{01101,"064  ","0640941","ﾎｯｶｲﾄﾞｳ","ｻｯﾎﾟﾛｼﾁｭｳｵｳｸ","ｱｻﾋｶﾞｵｶ","北海道","札幌市中央区","旭ケ丘",0,0,1,0,0,0},
     qq{13113,"151  ","1510064","ﾄｳｷｮｳﾄ","ｼﾌﾞﾔｸ","ｳｴﾊﾗ","東京都","渋谷区","上原",0,0,1,0,0,0},
     qq{13307,"19002","1900223","ﾄｳｷｮｳﾄ","ﾆｼﾀﾏｸﾞﾝﾋﾉﾊﾗﾑﾗ","ﾅﾝｺﾞｳ","東京都","西多摩郡檜原村","南郷",0,0,0,0,0,0};
-$data .= "\r\n";
-open my $fh, '<:utf8', \$data;
-
-my $parser = Parse::JapaneseZipCode->new( fh => $fh );
 
 # region_id, old_zip, zip, pref_kana, city_kana, town_kana, $pref, $city, $town, $is_multi_zip, $has_koaza_banchi, $has_chome, $is_multi_town, $update_status, $update_reason
 subtest 'sapporo' => sub {

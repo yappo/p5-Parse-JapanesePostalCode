@@ -5,6 +5,7 @@ readme_from 'lib/Parse/JapaneseZipCode.pm';
 readme_markdown_from 'lib/Parse/JapaneseZipCode.pm';
 githubmeta;
 
+requires 'parent';
 requires 'Lingua::JA::Regular::Unicode';
 
 tests 't/*.t';
