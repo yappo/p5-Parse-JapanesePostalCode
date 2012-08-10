@@ -58,7 +58,7 @@ subtest 'meieki 1' => sub {
     is($row->zip, '4506051');
     is($row->town, '');
     is($row->town_kana, '');
-    is($row->build, '名駅ＪＲセントラルタワーズ');
+    is($row->build, '名駅JRセントラルタワーズ');
     is($row->build_kana, 'メイエキジェイアールセントラルタワーズ');
     is($row->floor, '51');
 };

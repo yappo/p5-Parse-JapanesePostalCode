@@ -49,6 +49,7 @@ sub new {
 
     my $self = bless {
         katakana_h2z    => 1,
+        alnum_z2h       => 1,
         build_town      => '',
         build_town_kana => '',
         %opts,
@@ -58,7 +59,7 @@ sub new {
     $self->fix_town;
     $self->fix_subtown;
     $self->fix_build;
-    $self->fix_kana;
+    $self->fix_kana_alnum;
 
     $self;
 }
@@ -136,12 +137,13 @@ sub fix_build {
     }
 }
 
-sub fix_kana {
+sub fix_kana_alnum {
     my $self = shift;
-    return unless $self->{katakana_h2z};
+    return unless$self->{katakana_h2z} || $self->{alnum_z2h};
     for my $name (qw/ pref_kana city_kana town_kana build_kana pref city town build /) {
         next unless defined $self->{columns}{$name};
-        $self->{columns}{$name} = katakana_h2z($self->{columns}{$name});
+        $self->{columns}{$name} = katakana_h2z($self->{columns}{$name}) if $self->{katakana_h2z};
+        $self->{columns}{$name} = alnum_z2h($self->{columns}{$name})    if $self->{alnum_z2h};
     }
 }
 
