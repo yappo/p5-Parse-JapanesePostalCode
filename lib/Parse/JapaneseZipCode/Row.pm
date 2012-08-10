@@ -65,6 +65,12 @@ sub fix_town {
     if ($columns->{town} eq '以下に掲載がない場合') {
         $columns->{town_kana} = undef;
         $columns->{town}      = undef;
+    } elsif ($columns->{town} =~ /^(.+)の次に番地がくる場合/) { 
+        my $name = $1;
+        if ($columns->{city} eq $name || $columns->{city} =~ /郡\Q$name\E$/) {
+            $columns->{town_kana} = undef;
+            $columns->{town}      = undef;
+        }
     } elsif ($columns->{town} =~ s/（その他）$//) {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
     } elsif ($columns->{town} =~ /^(.+[町村])一円$/) {
