@@ -51,6 +51,8 @@ sub fix_town {
     if ($columns->{town} eq '以下に掲載がない場合') {
         $columns->{town_kana} = undef;
         $columns->{town}      = undef;
+    } elsif ($columns->{town} =~ s/（その他）$//) {
+        $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
     }
 }
 
