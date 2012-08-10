@@ -68,6 +68,8 @@ sub fix_town {
     } elsif ($columns->{town} =~ s/（その他）$//) {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
     }
+
+    $columns->{town} =~ s/[〜～]/〜/g if $columns->{town};
 }
 
 sub fix_subtown {
@@ -79,11 +81,11 @@ sub fix_subtown {
     my @subtown_kana;
 
     # chome
-    if ($columns->{town} =~ s/（([\d〜～、]+)丁目）$//) {
+    if ($columns->{town} =~ s/（([\d〜、]+)丁目）$//) {
         my $num = alnum_z2h($1);
 
         my @nums = map {
-            if (/^(\d+)[〜～](\d+)$/) {
+            if (/^(\d+)〜(\d+)$/) {
                 ($1..$2);
             } else {
                 $_
@@ -95,12 +97,87 @@ sub fix_subtown {
 
         $columns->{town_kana} =~ s/\([\d\-､]+ﾁｮｳﾒ\)$//;
     }
-
     # banchi
-    if ($columns->{town} =~ s/（(.+?番地)）$//) {
+    elsif ($columns->{town} =~ s/（(.+?番地)）$//) {
         @subtown = map { alnum_z2h($_) } split /、/, $1;
         $columns->{town_kana} =~ s/\((.+?ﾊﾞﾝﾁ)\)$//;
         @subtown_kana = map { alnum_z2h($_) } split /､/, $1;
+    }
+    # chiwari
+    elsif ($columns->{town} =~ /地割/) {
+        my($prefix, $koaza)           = $columns->{town}      =~ /^(.+\d+地割)(?:（(.+)）)?$/;
+        my($prefix_kana, $koaza_kana) = $columns->{town_kana} =~ /^(.+\d+ﾁﾜﾘ)(?:\((.+)\))?$/;
+
+        my($aza, $chiwari)           = $prefix      =~ /^(.+?)第?(\d+地割.*)$/;
+        my($aza_kana, $chiwari_kana) = $prefix_kana =~ /^(.+?)(?:ﾀﾞｲ)?(\d+ﾁﾜﾘ.*)$/;
+
+        if ($chiwari =~ /〜/) {
+            my @tmp = map {
+                if (/\d+地割$/) {
+                    my $str = $_;
+                    $str =~ s/^$aza//;
+                    $str =~ s/^第//;
+                    "第$str";
+                } else {
+                    $_;
+                }
+            } split /〜/, $chiwari;
+            $chiwari = join '〜', @tmp;
+        }
+        if ($chiwari_kana =~ /-/) {
+            my @tmp = map {
+                if (/\d+ﾁﾜﾘ$/) {
+                    my $str = $_;
+                    $str =~ s/^$aza_kana//;
+                    $str =~ s/^ﾀﾞｲ//;
+                    "ﾀﾞｲ$str";
+                } else {
+                    $_;
+                }
+            } split /-/, $chiwari_kana;
+            $chiwari_kana = join '-', @tmp;
+        }
+
+        @subtown = map {
+            if (/\d+地割$/) {
+                my $str = $_;
+                $str =~ s/^$aza//;
+                $str =~ s/^第//;
+                "第$str";
+            } else {
+                $_;
+            }
+        } split /、/, $chiwari;
+        @subtown_kana = map {
+            if (/\d+ﾁﾜﾘ$/) {
+                my $str = $_;
+                $str =~ s/^$aza_kana//;
+                $str =~ s/^ﾀﾞｲ//;
+                "ﾀﾞｲ$str";
+            } else {
+                $_;
+            }
+        } split /､/, $chiwari_kana;
+
+        if ($koaza) {
+            @subtown = map {
+                my $str = $_;
+                map {
+                    "$str $_";
+                } split /、/, $koaza;
+            } @subtown;
+        }
+        if ($koaza_kana) {
+            @subtown_kana = map {
+                my $str = $_;
+                map {
+                    "$str $_";
+                } split /､/, $koaza_kana;
+            } @subtown_kana;
+        }
+
+        $columns->{town}      = $aza;
+        $columns->{town_kana} = $aza_kana;
     }
 
     $columns->{subtown}      = \@subtown      if @subtown;
