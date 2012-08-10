@@ -67,6 +67,12 @@ sub fix_town {
         $columns->{town}      = undef;
     } elsif ($columns->{town} =~ s/（その他）$//) {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
+    } elsif ($columns->{town} =~ /^(.+[町村])一円$/) {
+        my $name = $1;
+        if ($columns->{city} =~ /郡\Q$name\E$/ || ($columns->{pref} eq '東京都' && $columns->{city} =~ /島村$/)) {
+            $columns->{town_kana} = undef;
+            $columns->{town}      = undef;
+        }
     }
 
     $columns->{town} =~ s/[〜～]/〜/g if $columns->{town};
