@@ -136,42 +136,42 @@ create to parser instance.
 
 read from file path.
 
-  my $parser = Parse::JapanesePostalCode->new(
-      file => 'foo/bar/KEN_ALL.csv',
-  );
+    my $parser = Parse::JapanesePostalCode->new(
+        file => 'foo/bar/KEN_ALL.csv',
+    );
 
 read from file handle.
 
-  my $parser = Parse::JapanesePostalCode->new(
-      fh => $ken_all_fh,
-  );
+    my $parser = Parse::JapanesePostalCode->new(
+        fh => $ken_all_fh,
+    );
 
 ignore katakana_h2z.
 
-  my $parser = Parse::JapanesePostalCode->new(
-      file => 'foo/bar/KEN_ALL.csv',
-      katakana_h2z => 0,
-  );
+    my $parser = Parse::JapanesePostalCode->new(
+        file => 'foo/bar/KEN_ALL.csv',
+        katakana_h2z => 0,
+    );
 
 ignore alnum_z2h.
 
-  my $parser = Parse::JapanesePostalCode->new(
-      file => 'foo/bar/KEN_ALL.csv',
-      alnum_z2h => 0,
-  );
+    my $parser = Parse::JapanesePostalCode->new(
+        file => 'foo/bar/KEN_ALL.csv',
+        alnum_z2h => 0,
+    );
 
 =head2 get_line
 
 get one line from KEN_ALL.csv.
 
-  while (my $line = $parser->get_line) {
-    say $line;
-  }
+    while (my $line = $parser->get_line) {
+      say $line;
+    }
 
 1行読み込みます。もし
 
-  07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ｹｶﾞﾔ(ﾏｴｶﾜﾊﾗ232-244､311､312､337-862ﾊﾞﾝﾁ","福島県","双葉郡富岡町","毛萱（前川原２３２〜２４４、３１１、３１２、３３７〜８６２番地",1,1,0,0,0,0
-  07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ﾄｳｷｮｳﾃﾞﾝﾘｮｸﾌｸｼﾏﾀﾞｲ2ｹﾞﾝｼﾘｮｸﾊﾂﾃﾞﾝｼｮｺｳﾅｲ)","福島県","双葉郡富岡町","〔東京電力福島第二原子力発電所構内〕）",1,1,0,0,0,0
+    07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ｹｶﾞﾔ(ﾏｴｶﾜﾊﾗ232-244､311､312､337-862ﾊﾞﾝﾁ","福島県","双葉郡富岡町","毛萱（前川原２３２〜２４４、３１１、３１２、３３７〜８６２番地",1,1,0,0,0,0
+    07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ﾄｳｷｮｳﾃﾞﾝﾘｮｸﾌｸｼﾏﾀﾞｲ2ｹﾞﾝｼﾘｮｸﾊﾂﾃﾞﾝｼｮｺｳﾅｲ)","福島県","双葉郡富岡町","〔東京電力福島第二原子力発電所構内〕）",1,1,0,0,0,0
 
 のように複数行に分割されていたら、良い感じに行をマージした結果を返します。
 
@@ -179,9 +179,9 @@ get one line from KEN_ALL.csv.
 
 get one line object from KEN_ALL.csv.
 
-  while (my $obj = $parser->fetch_obj) {
-    say $obj->zip;
-  }
+    while (my $obj = $parser->fetch_obj) {
+      say $obj->zip;
+    }
 
 get_line で取得した行を、 L<Parse::JapanesePostalCode::Row> でオブジェクト化したオブジェクトを返します。
 
