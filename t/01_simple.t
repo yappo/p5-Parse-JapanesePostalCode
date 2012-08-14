@@ -5,7 +5,7 @@ use Test::More;
 
 use File::Temp 'tempfile';
 
-use Parse::JapaneseZipCode;
+use Parse::JapanesePostalCode;
 
 my($fh, $filename) = tempfile( UNLINK => 1 );
 close $fh;
@@ -14,7 +14,7 @@ print $fh q{01101,"064  ","0640941","ﾎｯｶｲﾄﾞｳ","ｻｯﾎﾟﾛｼ�
 print $fh "\r\n";
 close $fh;
 
-my $parser = Parse::JapaneseZipCode->new(
+my $parser = Parse::JapanesePostalCode->new(
     file => $filename,
 );
 

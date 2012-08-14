@@ -1,10 +1,10 @@
-package Parse::JapaneseZipCode;
+package Parse::JapanesePostalCode;
 use strict;
 use warnings;
 use utf8;
 our $VERSION = '0.01';
 
-use Parse::JapaneseZipCode::Row;
+use Parse::JapanesePostalCode::Row;
 
 sub new {
     my($class, %opts) = @_;
@@ -30,11 +30,11 @@ sub fetch_obj {
 
     my $row = $self->get_line;
     return unless $row;
-    my @names = Parse::JapaneseZipCode::Row->columns;
+    my @names = Parse::JapanesePostalCode::Row->columns;
     my %columns;
     @columns{@names} = @{ $row };
 
-    Parse::JapaneseZipCode::Row->new(
+    Parse::JapanesePostalCode::Row->new(
         build_town      => $self->{current_build_town},
         build_town_kana => $self->{current_build_town_kana},
         katakana_h2z    => $self->{katakana_h2z},
@@ -103,13 +103,13 @@ __END__
 
 =head1 NAME
 
-Parse::JapaneseZipCode - ZipCode Parser for 日本郵政
+Parse::JapanesePostalCode - PostalCode Parser for 日本郵政
 
 =head1 SYNOPSIS
 
-    use Parse::JapaneseZipCode;
+    use Parse::JapanesePostalCode;
 
-    my $parser = Parse::JapaneseZipCode->new( file => 'KEN_ALL.csv' );
+    my $parser = Parse::JapanesePostalCode->new( file => 'KEN_ALL.csv' );
     while (my $obj = $parser->fetch_obj) {
         my @list = ($obj->zip, $obj->pref, $obj->city, $obj->town);
         # TODO: my @list = map { $_ ? $_ : () } ($obj->zip, $obj->pref, $obj->district, $obj->city, $obj->ward, $obj->town);
@@ -125,7 +125,7 @@ Parse::JapaneseZipCode - ZipCode Parser for 日本郵政
 
 =head1 DESCRIPTION
 
-Parse::JapaneseZipCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
+Parse::JapanesePostalCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
 
 =head1 AUTHOR
 

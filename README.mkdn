@@ -1,12 +1,12 @@
 # NAME
 
-Parse::JapaneseZipCode - ZipCode Parser for 日本郵政
+Parse::JapanesePostalCode - PostalCode Parser for 日本郵政
 
 # SYNOPSIS
 
-    use Parse::JapaneseZipCode;
+    use Parse::JapanesePostalCode;
 
-    my $parser = Parse::JapaneseZipCode->new( file => 'KEN_ALL.csv' );
+    my $parser = Parse::JapanesePostalCode->new( file => 'KEN_ALL.csv' );
     while (my $obj = $parser->fetch_obj) {
         my @list = ($obj->zip, $obj->pref, $obj->city, $obj->town);
         # TODO: my @list = map { $_ ? $_ : () } ($obj->zip, $obj->pref, $obj->district, $obj->city, $obj->ward, $obj->town);
@@ -22,7 +22,7 @@ Parse::JapaneseZipCode - ZipCode Parser for 日本郵政
 
 # DESCRIPTION
 
-Parse::JapaneseZipCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
+Parse::JapanesePostalCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
 
 # AUTHOR
 

@@ -4,13 +4,13 @@ use warnings;
 use utf8;
 use 5.014;
 use lib 'lib';
-use Parse::JapaneseZipCode;
+use Parse::JapanesePostalCode;
 
 binmode STDOUT => 'utf8';
 
 my $ken_all = shift;
 
-my $parser = Parse::JapaneseZipCode->new( file => $ken_all );
+my $parser = Parse::JapanesePostalCode->new( file => $ken_all );
 while (my $obj = $parser->fetch_obj) {
     next unless $obj->town;
     next unless $obj->town =~ /(?:地割|一円|の次に番地がくる場合|区画|[０-９](?:丁目|番地|番地?以[上下]|以[上外]|号.?|地割|[線番～])|その他|を除く|[０-９]|丁目|番地|及び|[〜～（）\(\)、「」])/;

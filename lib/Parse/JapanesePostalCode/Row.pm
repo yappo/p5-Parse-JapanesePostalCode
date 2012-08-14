@@ -1,4 +1,4 @@
-package Parse::JapaneseZipCode::Row;
+package Parse::JapanesePostalCode::Row;
 use strict;
 use warnings;
 use utf8;
@@ -316,6 +316,6 @@ __END__
 
 =head1 NAME
 
-Parse::JapaneseZipCode::Row -
+Parse::JapanesePostalCode::Row -
 
 =cut
