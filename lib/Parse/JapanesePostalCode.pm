@@ -111,8 +111,7 @@ Parse::JapanesePostalCode - PostalCode Parser for 日本郵政
 
     my $parser = Parse::JapanesePostalCode->new( file => 'KEN_ALL.csv' );
     while (my $obj = $parser->fetch_obj) {
-        my @list = ($obj->zip, $obj->pref, $obj->city, $obj->town);
-        # TODO: my @list = map { $_ ? $_ : () } ($obj->zip, $obj->pref, $obj->district, $obj->city, $obj->ward, $obj->town);
+        my @list = map { $_ ? $_ : () } ($obj->zip, $obj->pref, $obj->district, $obj->city, $obj->ward, $obj->town);
         if ($obj->has_subtown) {
             push @list, join '/', @{ $obj->subtown };
         }
@@ -125,13 +124,75 @@ Parse::JapanesePostalCode - PostalCode Parser for 日本郵政
 
 =head1 DESCRIPTION
 
+Parse::JapanesePostalCode is a feel good parser to parse to Postal Code files that are provided by Japan Post.
+
 Parse::JapanesePostalCode は、日本郵政が提供している郵便番号ファイルを良い感じにパースしてくれるパーサです。
+
+=head1 METHODS
+
+=head2 new
+
+create to parser instance.
+
+read from file path.
+
+  my $parser = Parse::JapanesePostalCode->new(
+      file => 'foo/bar/KEN_ALL.csv',
+  );
+
+read from file handle.
+
+  my $parser = Parse::JapanesePostalCode->new(
+      fh => $ken_all_fh,
+  );
+
+ignore katakana_h2z.
+
+  my $parser = Parse::JapanesePostalCode->new(
+      file => 'foo/bar/KEN_ALL.csv',
+      katakana_h2z => 0,
+  );
+
+ignore alnum_z2h.
+
+  my $parser = Parse::JapanesePostalCode->new(
+      file => 'foo/bar/KEN_ALL.csv',
+      alnum_z2h => 0,
+  );
+
+=head2 get_line
+
+get one line from KEN_ALL.csv.
+
+  while (my $line = $parser->get_line) {
+    say $line;
+  }
+
+1行読み込みます。もし
+
+  07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ｹｶﾞﾔ(ﾏｴｶﾜﾊﾗ232-244､311､312､337-862ﾊﾞﾝﾁ","福島県","双葉郡富岡町","毛萱（前川原２３２〜２４４、３１１、３１２、３３７〜８６２番地",1,1,0,0,0,0
+  07543,"97906","9790622","ﾌｸｼﾏｹﾝ","ﾌﾀﾊﾞｸﾞﾝﾄﾐｵｶﾏﾁ","ﾄｳｷｮｳﾃﾞﾝﾘｮｸﾌｸｼﾏﾀﾞｲ2ｹﾞﾝｼﾘｮｸﾊﾂﾃﾞﾝｼｮｺｳﾅｲ)","福島県","双葉郡富岡町","〔東京電力福島第二原子力発電所構内〕）",1,1,0,0,0,0
+
+のように複数行に分割されていたら、良い感じに行をマージした結果を返します。
+
+=head2 getch_obj
+
+get one line object from KEN_ALL.csv.
+
+  while (my $obj = $parser->fetch_obj) {
+    say $obj->zip;
+  }
+
+get_line で取得した行を、 L<Parse::JapanesePostalCode::Row> でオブジェクト化したオブジェクトを返します。
 
 =head1 AUTHOR
 
 Kazuhiro Osawa E<lt>yappo {at} shibuya {dot} plE<gt>
 
 =head1 SEE ALSO
+
+L<Parse::JapanesePostalCode::Row>,
+L<http://www.post.japanpost.jp/zipcode/download.html>
 
 =head1 LICENSE
 

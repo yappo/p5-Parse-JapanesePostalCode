@@ -316,6 +316,135 @@ __END__
 
 =head1 NAME
 
-Parse::JapanesePostalCode::Row -
+Parse::JapanesePostalCode::Row - Object of Japanese PostalCode
+
+=head1 METHODS
+
+=head2 new
+
+instance method.
+
+=head2 region_id
+
+全国地方公共団体コード(JIS X0401、X0402) を返します。
+
+=head2 old_zip
+
+(旧)郵便番号(5桁) を返します。
+
+=head2 zip
+
+郵便番号(7桁) を返します。
+
+=head2 pref
+
+都道府県名 を返します。
+
+=head2 region
+
+市区町村名 を返します。町村の場合には郡を含み、政令指定都市の場合には区を含みます。
+
+=head2 district
+
+region から、郡名を抜き出した物を返します。なければ undef が返ります。
+
+=head2 city
+
+region から、市名を抜き出した物を返します。なければ undef が返ります。
+
+=head2 ward
+
+region から、区名を抜き出した物を返します。なければ undef が返ります。
+
+=head2 town
+
+町域名 を返します。小字、丁目、番地，号、ビル名等は含まれません。基本的に大字と同等の町域名が入ります。
+実質町域を指定していない物では undef が返ります。
+
+=head2 build
+
+ビル名が入ります。なければ undef が返ります。
+
+=head2 floor
+
+ビルの階が入ります。地階、不明階やビルでない場合には undef が返ります。
+
+=head2 has_subtown
+
+小字、丁目、番地，号がある場合には真が返ります。
+
+=head2 subtown
+
+小字、丁目、番地，号等が ARRAY ref で返ります。
+
+=head2 pref
+
+都道府県名 を返します。
+
+=head2 region_kana
+
+カタカナが返ります。
+
+=head2 district_kana
+
+カタカナが返ります。
+
+=head2 city_kana
+
+カタカナが返ります。
+
+=head2 ward_kana
+
+カタカナが返ります。
+
+=head2 town_kana
+
+カタカナが返ります。
+
+=head2 build_kana
+
+カタカナが返ります。
+
+=head2 subtown_kana
+
+カタカナが返ります。
+
+=head2 is_multi_zip
+
+一町域が二以上の郵便番号で表される場合の表示 が返ります。
+
+=head2 has_koaza_banchi
+
+小字毎に番地が起番されている町域の表示 が返ります。
+
+=head2 has_chome
+
+丁目を有する町域の場合の表示 が返ります。
+
+=head2 is_multi_town
+
+一つの郵便番号で二以上の町域を表す場合の表示 が返ります。
+
+=head2 update_status
+
+更新の表示 が返ります。
+
+=head2 update_reason
+
+変更理由 が返ります。
+
+=head1 AUTHOR
+
+Kazuhiro Osawa E<lt>yappo {at} shibuya {dot} plE<gt>
+
+=head1 SEE ALSO
+
+L<Parse::JapanesePostalCode>,
+L<http://www.post.japanpost.jp/zipcode/download.html>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
