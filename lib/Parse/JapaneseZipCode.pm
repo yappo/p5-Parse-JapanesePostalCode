@@ -11,6 +11,8 @@ sub new {
 
     my $self = bless {
         format => 'ken',
+        katakana_h2z => 1,
+        alnum_z2h    => 1,
         %opts,
         current_build_town      => '',
         current_build_town_kana => '',
@@ -35,6 +37,8 @@ sub fetch_obj {
     Parse::JapaneseZipCode::Row->new(
         build_town      => $self->{current_build_town},
         build_town_kana => $self->{current_build_town_kana},
+        katakana_h2z    => $self->{katakana_h2z},
+        alnum_z2h       => $self->{alnum_z2h},
         %columns,
     );
 }
