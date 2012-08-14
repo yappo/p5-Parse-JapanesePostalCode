@@ -175,7 +175,7 @@ get one line from KEN_ALL.csv.
 
 のように複数行に分割されていたら、良い感じに行をマージした結果を返します。
 
-=head2 getch_obj
+=head2 fetch_obj
 
 get one line object from KEN_ALL.csv.
 

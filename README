@@ -67,7 +67,7 @@ METHODS
 
     のように複数行に分割されていたら、良い感じに行をマージした結果を返します。
 
-  getch_obj
+  fetch_obj
     get one line object from KEN_ALL.csv.
 
         while (my $obj = $parser->fetch_obj) {
