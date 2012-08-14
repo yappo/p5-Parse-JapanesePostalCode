@@ -78,6 +78,9 @@ sub get_line {
     if ($town =~ /^(.+)（次のビルを除く）$/) {
         $self->{current_build_town} = $1;
         ($self->{current_build_town_kana}) = $row->[5] =~ /^(.+)\(/;
+    } elsif ($row->[2] eq '4530002' && $town =~ /^名駅\（/) {
+        $self->{current_build_town}      = '名駅';
+        $self->{current_build_town_kana} = 'ﾒｲｴｷ';
     } else {
         my $current_build_town = $self->{current_build_town};
         unless ($town =~ /^$current_build_town.+（.+階.*）$/) {
