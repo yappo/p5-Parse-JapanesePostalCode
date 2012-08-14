@@ -12,10 +12,10 @@ my $ken_all = shift;
 
 my $parser = Parse::JapaneseZipCode->new( file => $ken_all );
 while (my $obj = $parser->fetch_obj) {
+#        pref_kana region_kana district_kana city_kana ward_kana town_kana build_kana
     my @line = map { defined $_ ? $_ : '' } map { $obj->$_ } qw/
         region_id old_zip zip
-        pref_kana city_kana town_kana build_kana
-        pref city town build floor
+        pref region district city ward town build floor
         is_multi_zip has_koaza_banchi has_chome is_multi_town
         update_status update_reason
     /;

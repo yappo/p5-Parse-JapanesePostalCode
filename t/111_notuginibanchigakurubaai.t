@@ -12,10 +12,10 @@ do {
     my $row = $parser->fetch_obj;
     is($row->zip, '5013701');
     is($row->pref_kana, 'ギフケン');
-    is($row->city_kana, 'ミノシ');
+    is($row->region_kana, 'ミノシ');
     is($row->town_kana, undef);
     is($row->pref, '岐阜県');
-    is($row->city, '美濃市');
+    is($row->region, '美濃市');
     is($row->town, undef);
 };
 
@@ -23,10 +23,10 @@ do {
     my $row = $parser->fetch_obj;
     is($row->zip, '3997201');
     is($row->pref_kana, 'ナガノケン');
-    is($row->city_kana, 'ヒガシチクマグンイクサカムラ');
+    is($row->region_kana, 'ヒガシチクマグンイクサカムラ');
     is($row->town_kana, undef);
     is($row->pref, '長野県');
-    is($row->city, '東筑摩郡生坂村');
+    is($row->region, '東筑摩郡生坂村');
     is($row->town, undef);
 };
 

@@ -14,12 +14,13 @@ sub alnum_z2h {
 
 my @COLUMNS = qw/
     region_id old_zip zip
-    pref_kana city_kana town_kana pref city town
+    pref_kana region_kana town_kana pref region town
     is_multi_zip has_koaza_banchi has_chome is_multi_town
     update_status update_reason
 /;
 
 my @METHODS = (@COLUMNS, qw/
+    district district_kana city city_kana ward ward_kana
     subtown_kana subtown
     build build_kana floor
 /);
@@ -51,12 +52,52 @@ sub new {
         columns      => $columns,
     }, $class;
 
+    $self->fix_region;
     $self->fix_town;
     $self->fix_build;
     $self->fix_subtown unless $self->build;
     $self->fix_kana_alnum;
 
     $self;
+}
+
+sub fix_region {
+    my $self = shift;
+    my $columns = $self->{columns};
+
+    $columns->{district}      = undef;
+    $columns->{district_kana} = undef;
+    $columns->{city}          = undef;
+    $columns->{city_kana}     = undef;
+    $columns->{ward}          = undef;
+    $columns->{ward_kana}     = undef;
+
+    # district
+    my($district, $town_village) = $self->region =~ /^(.+?郡)(.+[町村])$/;
+    if ($district && $town_village) {
+        my($district_kana, $town_village_kana) = $self->region_kana =~ /^((?:ｷﾀｸﾞﾝﾏ|.+?)ｸﾞﾝ)(.+)$/;
+
+        $columns->{district}      = $district;
+        $columns->{district_kana} = $district_kana;
+        $columns->{city}          = $town_village;
+        $columns->{city_kana}     = $town_village_kana;
+    } else {
+        my($city, $ward) = $self->region =~ /^(.+市)(.+区)$/;
+        if ($city && $ward) {
+            my($city_kana, $ward_kana) = $self->region_kana =~ /^((?:ﾋﾛｼﾏ|ｷﾀｷｭｳｼｭｳ|.+?)ｼ)(.+)$/;
+
+            $columns->{city}      = $city;
+            $columns->{city_kana} = $city_kana;
+            $columns->{ward}      = $ward;
+            $columns->{ward_kana} = $ward_kana;
+        } elsif ($self->region =~ /区$/) {
+            $columns->{ward}      = $self->region;
+            $columns->{ward_kana} = $self->region_kana;
+        } else {
+            $columns->{city}      = $self->region;
+            $columns->{city_kana} = $self->region_kana;
+        }
+    }
 }
 
 sub fix_town {
@@ -75,7 +116,7 @@ sub fix_town {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
     } elsif ($columns->{town} =~ /^(.+[町村])一円$/) {
         my $name = $1;
-        if ($columns->{city} =~ /郡\Q$name\E$/ || ($columns->{pref} eq '東京都' && $columns->{city} =~ /島村$/)) {
+        if ($columns->{city} eq $name) {
             $columns->{town_kana} = undef;
             $columns->{town}      = undef;
         }
@@ -251,7 +292,7 @@ sub fix_build {
 sub fix_kana_alnum {
     my $self = shift;
     return unless$self->{katakana_h2z} || $self->{alnum_z2h};
-    for my $name (qw/ pref_kana city_kana town_kana build_kana pref city town build /) {
+    for my $name (qw/ pref_kana region_kana district_kana city_kana ward_kana town_kana build_kana pref region district city ward town build /) {
         next unless defined $self->{columns}{$name};
         $self->{columns}{$name} = katakana_h2z($self->{columns}{$name}) if $self->{katakana_h2z};
         $self->{columns}{$name} = alnum_z2h($self->{columns}{$name})    if $self->{alnum_z2h};
