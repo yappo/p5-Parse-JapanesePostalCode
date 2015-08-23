@@ -15,7 +15,7 @@ my $parser = make_parser
 my $row = $parser->fetch_obj;
 is $row->town, '笹屋町';
 is $row->town_kana, 'ササヤチョウ';
-ok scalar($row->subtown) > 0;
-ok scalar($row->subtown_kana) == 0;
+ok scalar(@{ $row->subtown }) > 0;
+ok scalar(@{ $row->subtown_kana }) == 0;
 
 done_testing;
