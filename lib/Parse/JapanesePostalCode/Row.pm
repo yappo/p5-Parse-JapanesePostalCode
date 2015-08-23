@@ -239,24 +239,25 @@ sub fix_subtown {
             $str =~ s/_____COMMNA_____/、/g;
             $str;
         } split /、/, $town;
-        my $kana = "";
-        if ($columns->{town_kana} =~ s/\((.+?)\)$// > 0) {
-            $kana = $1;
+        if ($columns->{town_kana} =~ s/\((.+?)\)$//) {
+            my $kana = $1;
+            $kana =~ s{<([^>]+)>}{
+                my $str = $1;
+                $str =~ s/､/_____COMMNA_____/g;
+                "<${str}>";
+            }ge;
+            @subtown_kana = map {
+                my $str = $_;
+                $str =~ s/_____COMMNA_____/,/g;
+                $str;
+            } split /､/, $kana;
         }
-        $kana =~ s{<([^>]+)>}{
-            my $str = $1;
-            $str =~ s/､/_____COMMNA_____/g;
-            "<${str}>";
-        }ge;
-        @subtown_kana = map {
-            my $str = $_;
-            $str =~ s/_____COMMNA_____/,/g;
-            $str;
-        } split /､/, $kana;
     }
 
-    $columns->{subtown}      = \@subtown      if @subtown;
-    $columns->{subtown_kana} = \@subtown_kana if @subtown_kana;
+    if (@subtown) {
+        $columns->{subtown}      = \@subtown;
+        $columns->{subtown_kana} = \@subtown_kana;
+    }
 }
 
 sub fix_build {
@@ -303,10 +304,10 @@ sub fix_kana_alnum {
         for my $i (0..(scalar(@{ $self->subtown }) - 1)) {
             $self->subtown->[$i]      = katakana_h2z($self->subtown->[$i]) if $self->{katakana_h2z};
             $self->subtown->[$i]      = alnum_z2h($self->subtown->[$i])    if $self->{alnum_z2h};
-            if ($self->subtown_kana) {
-                $self->subtown_kana->[$i] = katakana_h2z($self->subtown_kana->[$i]) if $self->{katakana_h2z};
-                $self->subtown_kana->[$i] = alnum_z2h($self->subtown_kana->[$i])    if $self->{alnum_z2h};
-            }
+        }
+        for my $i (0..(scalar(@{ $self->subtown_kana }) - 1)) {
+            $self->subtown_kana->[$i] = katakana_h2z($self->subtown_kana->[$i]) if $self->{katakana_h2z};
+            $self->subtown_kana->[$i] = alnum_z2h($self->subtown_kana->[$i])    if $self->{alnum_z2h};
         }
     }
 }
