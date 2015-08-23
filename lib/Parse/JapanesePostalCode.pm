@@ -68,11 +68,11 @@ sub get_line {
     my $row = $self->_get_line;
     return unless $row;
     if ($row->[8] =~ /（.+[^）]$/) {
-        my $past_town_kana = "";
+        my $past_town_kana = $row->[5];
         while (1) {
             my $tmp = $self->_get_line;
             return unless $tmp;
-            $row->[5] .= $tmp->[5] unless ($past_town_kana ne $tmp->[5]);
+            $row->[5] .= $tmp->[5] unless $past_town_kana eq $tmp->[5];
             $row->[8] .= $tmp->[8];
             last if $row->[8] =~ /\）$/;
             $past_town_kana = $tmp->[5];
