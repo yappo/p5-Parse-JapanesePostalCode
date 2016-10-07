@@ -111,6 +111,10 @@ sub fix_town {
         if ($columns->{city} eq $name || $columns->{city} =~ /郡\Q$name\E$/) {
             $columns->{town_kana} = undef;
             $columns->{town}      = undef;
+        } else {
+            $columns->{town_kana} =~ /^(.+)ﾉﾂｷﾞﾆﾊﾞﾝﾁｶﾞｸﾙﾊﾞｱｲ/;
+            $columns->{town_kana} = $1;
+            $columns->{town}      = $name;
         }
     } elsif ($columns->{town} =~ s/（その他）$//) {
         $columns->{town_kana} =~ s/\(ｿﾉﾀ\)$//;
